@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"httpserver/internal/headers"
 	"httpserver/internal/request"
 	"httpserver/internal/response"
 	"httpserver/internal/server"
@@ -16,7 +17,7 @@ const port = 42069
 func main() {
 	srv, err := server.Serve(port, func(w *response.Writer, rq *request.Request) {
 		status := response.StatusOk
-		h := response.GetDefaultHeaders(0)
+		h := headers.GetDefaultHeaders(0)
 		body := response.OkRespond()
 		if rq.RequestLine.RequestTarget == "/yourproblem" {
 			status = response.StatusBadRequest
@@ -36,7 +37,6 @@ func main() {
 	}
 	defer srv.Close()
 	log.Println("Server started on port", port)
-
 	sigChan := make(chan os.Signal, 1)
 	signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM)
 	<-sigChan

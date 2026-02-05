@@ -31,7 +31,7 @@ func parseRequestLine(b []byte) (rl *RequestLine, read int, er error) {
 
 	httpParts := bytes.Split(parts[2], []byte("/"))
 	if len(httpParts) != 2 || string(httpParts[0]) != "HTTP" || string(httpParts[1]) != "1.1" {
-		return nil, 0, errors.New("unsupported http version")
+		return nil, 0, errors.New("unsupported protocol")
 	}
 
 	rl = &RequestLine{

@@ -2,13 +2,13 @@ package server
 
 import (
 	"fmt"
+	"httpserver/internal/headers"
 	"httpserver/internal/request"
 	"httpserver/internal/response"
 	"io"
 	"net"
 )
 
-// TODO: get different handler according to request target
 type Handler func(w *response.Writer, rq *request.Request)
 
 type Server struct {
@@ -18,30 +18,14 @@ type Server struct {
 
 func runConnection(srv *Server, conn io.ReadWriteCloser) {
 	defer conn.Close()
-
 	responseWriter := response.NewWriter(conn)
 	rq, err := request.RequestFromReader(conn)
 	if err != nil {
 		responseWriter.WriteStatusLine(response.StatusBadRequest)
-		responseWriter.WriteHeaders(response.GetDefaultHeaders(0))
+		responseWriter.WriteHeaders(headers.GetDefaultHeaders(0))
 		return
 	}
-
 	srv.handler(responseWriter, rq)
-
-	// var body []byte = nil
-	// var status response.StatusCode = response.StatusOk
-	// if handlerError != nil {
-	// 	status = handlerError.StatusCode
-	// 	body = []byte(handlerError.Message)
-	// } else {
-	// 	body = writer.Bytes()
-	// }
-
-	// responseWriter.WriteStatusLine(status)
-	// headers.Replace("content-length", fmt.Sprintf("%d", len(body)))
-	// responseWriter.WriteHeaders(headers)
-	// responseWriter.WriteBody(body)
 }
 
 func runServer(srv *Server, listener net.Listener) {

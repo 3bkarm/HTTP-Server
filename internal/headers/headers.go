@@ -21,6 +21,14 @@ func NewHeaders() *Headers {
 	}
 }
 
+func GetDefaultHeaders(contentLength int) *Headers {
+	h := NewHeaders()
+	h.Set("content-length", fmt.Sprintf("%d", contentLength))
+	h.Set("connection", "close")
+	h.Set("content-type", "text/plain")
+	return h
+}
+
 func isToken(str string) bool {
 	for _, ch := range str {
 		ok := false

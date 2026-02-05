@@ -48,24 +48,16 @@ func BadRequestRespond() []byte {
 
 func InternalServerErrorRespond() []byte {
 	return []byte(`
-		<html>
-			<head>
-				<title>500 Internal Server Error</title>
-			</head>
-			<body>
-				<h1>Internal Server Error</h1>
-				<p>Okay, you know what? This one is on me.</p>
-			</body>
-		</html>
+	<html>
+		<head>
+			<title>500 Internal Server Error</title>
+		</head>
+		<body>
+			<h1>Internal Server Error</h1>
+			<p>Okay, you know what? This one is on me.</p>
+		</body>
+	</html>
 	`)
-}
-
-func GetDefaultHeaders(contentLength int) *headers.Headers {
-	h := headers.NewHeaders()
-	h.Set("content-length", fmt.Sprintf("%d", contentLength))
-	h.Set("connection", "close")
-	h.Set("content-type", "text/plain")
-	return h
 }
 
 type Writer struct {
@@ -86,7 +78,7 @@ func (w *Writer) WriteStatusLine(statusCode StatusCode) error {
 	case StatusInternalServerError:
 		statusLine = []byte("HTTP/1.1 500 Internal Server Error\r\n")
 	default:
-		return errors.New("unrecognized error code")
+		return errors.New("unrecognized status code")
 	}
 	_, err := w.writer.Write(statusLine)
 	return err
